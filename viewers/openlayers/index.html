@@ -89,51 +89,18 @@
     /**********************************
      * 2. Capa envolvente_s como WMS
      **********************************/
-    const layerSingleTile = new ol.layer.Image({
-      source: new ol.source.ImageWMS({
-        url: 'http://localhost:8080/geoserver/siglibre/wms',
-        params: {
-          'FORMAT': 'image/png',
-          'VERSION': '1.3.0',
-          'LAYERS': 'siglibre:envolvente_s'
-        }
-      })
-    });
+    // const layerSingleTile = new ol.layer.Image({
+    //   source: new ol.source.ImageWMS({
+    //     url: 'http://localhost:8080/geoserver/siglibre/wms',
+    //     params: {
+    //       'FORMAT': 'image/png',
+    //       'VERSION': '1.3.0',
+    //       'LAYERS': 'siglibre:envolvente_s'
+    //     }
+    //   })
+    // });
 
-    map.addLayer(layerSingleTile);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /******************************************
-     * 2. Capa envolvente_s como WMS tileada
-     ******************************************/
-    const layerTiled = new ol.layer.Tile({
-      source: new ol.source.TileWMS({
-        url: 'http://localhost:8080/geoserver/siglibre/wms',
-        params: {
-          'FORMAT': 'image/png',
-          'VERSION': '1.3.0',
-          'TILED': true,
-          'LAYERS': 'siglibre:envolvente_s'
-        }
-      })
-    });
-
-    layerSingleTile.setVisible(false);
-    map.addLayer(layerTiled);
+    // map.addLayer(layerSingleTile);
 
 
 
@@ -151,77 +118,22 @@
 
 
     /******************************************
-     * 3. Estilos sobre la capa envolvente_s
+     * 3. Capa envolvente_s como WMS tileada
      ******************************************/
-    layerTiled.getSource().updateParams({
-      'FORMAT': 'image/png',
-      'VERSION': '1.3.0',
-      'TILED': true,
-      'LAYERS': 'siglibre:envolvente_s',
-      'STYLES': 'sigte'
-    });
+    // const layerTiled = new ol.layer.Tile({
+    //   source: new ol.source.TileWMS({
+    //     url: 'http://localhost:8080/geoserver/siglibre/wms',
+    //     params: {
+    //       'FORMAT': 'image/png',
+    //       'VERSION': '1.3.0',
+    //       'TILED': true,
+    //       'LAYERS': 'siglibre:envolvente_s'
+    //     }
+    //   })
+    // });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /******************************************
-     * 4. CQL filtros sobre envolvente_s
-     ******************************************/
-      layerTiled.getSource().updateParams({
-      'FORMAT': 'image/png',
-      'VERSION': '1.3.0',
-      'TILED': true,
-      'LAYERS': 'siglibre:envolvente_s',
-      'STYLES': 'sigte',
-      'CQL_FILTER': 'ine = 1'
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /******************************************
-     * 5. Pedir información a envolvente_s
-     ******************************************/
-    const getInfoFromLayerTiled = function(event) {
-      const viewResolution = map.getView().getResolution();
-      const getFeatureInfoUrl = layerTiled.getSource().getFeatureInfoUrl(
-        event.coordinate,
-        viewResolution,
-        'EPSG:3857',
-        {
-          'INFO_FORMAT': 'text/html'
-        }
-      );
-      fetch(getFeatureInfoUrl)
-        .then((res) => res.text())
-        .then((infoHtml) => document.getElementById('layerWMSInfo').innerHTML = infoHtml)
-    };
-    map.on('singleclick', getInfoFromLayerTiled);
-
-
-
+    // layerSingleTile.setVisible(false);
+    // map.addLayer(layerTiled);
 
 
 
@@ -239,29 +151,74 @@
 
 
     /******************************************
-     * 6. Capa envolvente_s como WFS
+     * 4. Estilos sobre la capa envolvente_s
      ******************************************/
-    const sourceWFS = new ol.source.Vector({
-      format: new ol.format.GeoJSON(),
-      url: (extent) =>
-       'http://localhost:8080/geoserver/siglibre/wfs?' +
-       'service=WFS' +
-       '&version=1.1.0' +
-       '&request=GetFeature' +
-       '&typename=siglibre:envolvente_s&' +
-       'outputFormat=application/json' +
-       '&srsname=EPSG:3857&' +
-       `bbox=${extent.join(',')},EPSG:3857`,
-      strategy: ol.loadingstrategy.bbox,
-    });
+    // layerTiled.getSource().updateParams({
+    //   'FORMAT': 'image/png',
+    //   'VERSION': '1.3.0',
+    //   'TILED': true,
+    //   'LAYERS': 'siglibre:envolvente_s',
+    //   'STYLES': 'sigte'
+    // });
 
-    const layerWFS = new ol.layer.Vector({
-      source: sourceWFS
-    });
 
-    layerTiled.setVisible(false);
-    map.getView().setZoom(14);
-    map.addLayer(layerWFS);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /******************************************
+     * 5. CQL filtros sobre envolvente_s
+     ******************************************/
+    // layerTiled.getSource().updateParams({
+    //   'FORMAT': 'image/png',
+    //   'VERSION': '1.3.0',
+    //   'TILED': true,
+    //   'LAYERS': 'siglibre:envolvente_s',
+    //   'STYLES': 'sigte',
+    //   'CQL_FILTER': 'ine = 1'
+    // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /******************************************
+     * 6. Pedir información a envolvente_s
+     ******************************************/
+    // const getInfoFromLayerTiled = function(event) {
+    //   const viewResolution = map.getView().getResolution();
+    //   const getFeatureInfoUrl = layerTiled.getSource().getFeatureInfoUrl(
+    //     event.coordinate,
+    //     viewResolution,
+    //     'EPSG:3857',
+    //     {
+    //       'INFO_FORMAT': 'text/html'
+    //     }
+    //   );
+    //   fetch(getFeatureInfoUrl)
+    //     .then((res) => res.text())
+    //     .then((infoHtml) => document.getElementById('layerWMSInfo').innerHTML = infoHtml)
+    // };
+    // map.on('singleclick', getInfoFromLayerTiled);
 
 
 
@@ -282,92 +239,29 @@
 
 
     /******************************************
-     * 7. Cambiar estilos al pasar el raton
+     * 7. Capa envolvente_s como WFS
      ******************************************/
-    const selectedStyle = new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: '#ffc107b8'
-      }),
-      stroke: new ol.style.Stroke({
-        color: '#fd7e14',
-        width: 2,
-      }),
-    });
-    let lastFeatureStyled;
-    const changeStyleToWFS = function(event) {
-      const features = map.getFeaturesAtPixel(event.pixel);
-      if (features.length > 0) {
-        if (lastFeatureStyled !== undefined) {
-          lastFeatureStyled.setStyle(undefined);
-        }
-        lastFeatureStyled = features[0];
-        lastFeatureStyled.setStyle(selectedStyle);
-      }
+    // const sourceWFS = new ol.source.Vector({
+    //   format: new ol.format.GeoJSON(),
+    //   url: (extent) =>
+    //    'http://localhost:8080/geoserver/siglibre/wfs?' +
+    //    'service=WFS' +
+    //    '&version=1.1.0' +
+    //    '&request=GetFeature' +
+    //    '&typename=siglibre:envolvente_s&' +
+    //    'outputFormat=application/json' +
+    //    '&srsname=EPSG:3857&' +
+    //    `bbox=${extent.join(',')},EPSG:3857`,
+    //   strategy: ol.loadingstrategy.bbox,
+    // });
 
-    };
-    map.un('singleclick', getInfoFromLayerTiled);
-    map.on('pointermove', changeStyleToWFS);
+    // const layerWFS = new ol.layer.Vector({
+    //   source: sourceWFS
+    // });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /******************************************
-     * 8. Obtener información de envolvente_s
-     ******************************************/
-    const getInfoFromLayerWFS = function(event) {
-      const features = map.getFeaturesAtPixel(event.pixel);
-      if (features.length > 0) {
-        const featureProps = features[0].getProperties();
-        const infoHtml =
-          `<table class="featureInfo">
-            <caption class="featureInfo">envolvente_s</caption>
-            <tr>
-              <th>fid</th>
-              <th>idpob</th>
-              <th>fecha</th>
-              <th>version</th>
-              <th>tipo</th>
-              <th>cpro</th>
-              <th>nombre</th>
-              <th>ine</th>
-              <th>codine</th>
-              <th>fechaine</th>
-              <th>tipogeom</th>
-            </tr>
-            <tr>
-              <td>${featureProps['fid']}.458</td>
-              <td>${featureProps['idpob']}</td>
-              <td>${featureProps['fecha']}.97142</td>
-              <td>${featureProps['version']}</td>
-              <td>${featureProps['tipo']}</td>
-              <td>${featureProps['cpro']}</td>
-              <td>${featureProps['nombre']}</td>
-              <td>${featureProps['ine']}</td>
-              <td>${featureProps['codine']}</td>
-              <td>${featureProps['fechaine']}</td>
-              <td>${featureProps['tipogeom']}</td>
-            </tr>
-          </table>`;
-        document.getElementById('layerWMSInfo').innerHTML = infoHtml;
-      } else {
-        document.getElementById('layerWMSInfo').innerHTML = '';
-      }
-    };
-    map.on('pointermove', getInfoFromLayerWFS);
+    // layerTiled.setVisible(false);
+    // map.getView().setZoom(14);
+    // map.addLayer(layerWFS);
 
 
 
@@ -388,22 +282,128 @@
 
 
     /******************************************
-     * 9. Añadir envolvente_s como MVT
+     * 8. Cambiar estilos al pasar el raton
      ******************************************/
-    const sourceMVT = new ol.source.VectorTile({
-      format: new ol.format.MVT(),
-      url: 'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/' +
-           'siglibre:envolvente_s@EPSG:3857@pbf/{z}/{x}/{-y}.pbf'
-    });
+    // const selectedStyle = new ol.style.Style({
+    //   fill: new ol.style.Fill({
+    //     color: '#ffc107b8'
+    //   }),
+    //   stroke: new ol.style.Stroke({
+    //     color: '#fd7e14',
+    //     width: 2,
+    //   }),
+    // });
+    // let lastFeatureStyled;
+    // const changeStyleToWFS = function(event) {
+    //   const features = map.getFeaturesAtPixel(event.pixel);
+    //   if (features.length > 0) {
+    //     if (lastFeatureStyled !== undefined) {
+    //       lastFeatureStyled.setStyle(undefined);
+    //     }
+    //     lastFeatureStyled = features[0];
+    //     lastFeatureStyled.setStyle(selectedStyle);
+    //   }
 
-    const layerMVT = new ol.layer.VectorTile({
-      source: sourceMVT
-    });
+    // };
+    // map.un('singleclick', getInfoFromLayerTiled);
+    // map.on('pointermove', changeStyleToWFS);
 
-    layerWFS.setVisible(false);
-    map.un('pointermove', getInfoFromLayerWFS);
-    map.un('pointermove', changeStyleToWFS);
-    map.addLayer(layerMVT);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /******************************************
+     * 9. Obtener información de envolvente_s
+     ******************************************/
+    // const getInfoFromLayerWFS = function(event) {
+    //   const features = map.getFeaturesAtPixel(event.pixel);
+    //   if (features.length > 0) {
+    //     const featureProps = features[0].getProperties();
+    //     const infoHtml =
+    //       `<table class="featureInfo">
+    //         <caption class="featureInfo">envolvente_s</caption>
+    //         <tr>
+    //           <th>fid</th>
+    //           <th>idpob</th>
+    //           <th>fecha</th>
+    //           <th>version</th>
+    //           <th>tipo</th>
+    //           <th>cpro</th>
+    //           <th>nombre</th>
+    //           <th>ine</th>
+    //           <th>codine</th>
+    //           <th>fechaine</th>
+    //           <th>tipogeom</th>
+    //         </tr>
+    //         <tr>
+    //           <td>${featureProps['fid']}.458</td>
+    //           <td>${featureProps['idpob']}</td>
+    //           <td>${featureProps['fecha']}.97142</td>
+    //           <td>${featureProps['version']}</td>
+    //           <td>${featureProps['tipo']}</td>
+    //           <td>${featureProps['cpro']}</td>
+    //           <td>${featureProps['nombre']}</td>
+    //           <td>${featureProps['ine']}</td>
+    //           <td>${featureProps['codine']}</td>
+    //           <td>${featureProps['fechaine']}</td>
+    //           <td>${featureProps['tipogeom']}</td>
+    //         </tr>
+    //       </table>`;
+    //     document.getElementById('layerWMSInfo').innerHTML = infoHtml;
+    //   } else {
+    //     document.getElementById('layerWMSInfo').innerHTML = '';
+    //   }
+    // };
+    // map.on('pointermove', getInfoFromLayerWFS);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /******************************************
+     * 10. Añadir envolvente_s como MVT
+     ******************************************/
+    // const sourceMVT = new ol.source.VectorTile({
+    //   format: new ol.format.MVT(),
+    //   url: 'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/' +
+    //        'siglibre:envolvente_s@EPSG:3857@pbf/{z}/{x}/{-y}.pbf'
+    // });
+
+    // const layerMVT = new ol.layer.VectorTile({
+    //   source: sourceMVT
+    // });
+
+    // layerWFS.setVisible(false);
+    // map.un('pointermove', getInfoFromLayerWFS);
+    // map.un('pointermove', changeStyleToWFS);
+    // map.addLayer(layerMVT);
 
 
 
@@ -431,20 +431,20 @@
 
 
     /******************************************
-     * 10. Añadir envolvente del servidor MVT
+     * 11. Añadir envolvente del servidor MVT
      ******************************************/
-    // -y: https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates/
-    const sourceServerMVT = new ol.source.VectorTile({
-      format: new ol.format.MVT(),
-      url: 'http://localhost:7070/envolvente/tiles/{z}/{x}/{y}.mvt'
-    });
+    // // -y: https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates/
+    // const sourceServerMVT = new ol.source.VectorTile({
+    //   format: new ol.format.MVT(),
+    //   url: 'http://localhost:7070/envolvente/tiles/{z}/{x}/{y}.mvt'
+    // });
 
-    const layerServerMVT = new ol.layer.VectorTile({
-      source: sourceServerMVT
-    });
+    // const layerServerMVT = new ol.layer.VectorTile({
+    //   source: sourceServerMVT
+    // });
 
-    layerMVT.setVisible(false);
-    map.addLayer(layerServerMVT);
+    // layerMVT.setVisible(false);
+    // map.addLayer(layerServerMVT);
 
   </script>
 </body>
