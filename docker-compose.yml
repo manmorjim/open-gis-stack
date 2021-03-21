@@ -1,0 +1,47 @@
+version: '2.4'
+services:
+
+  viewers:
+    image: "httpd:2.4"
+    env_file: .env
+    volumes:
+      - ./viewers:/usr/local/apache2/htdocs/
+    ports:
+      - "6060:80"
+    links:
+      - "geoserver:geoserver"
+      - "mvtserver:mvtserver"
+
+  mvtserver:
+    build:
+      context: ./mvt_server
+    env_file: .env
+    volumes:
+      - ./mvt_server:/usr/src/app
+    ports:
+      - "7070:7070"
+      - "9229:9229"
+    links:
+      - postgis:postgis
+
+  geoserver:
+    image: "kartoza/geoserver"
+    env_file: .env
+    volumes:
+      - ./geoserver_data:/opt/geoserver/data_dir
+    ports:
+      - "8080:8080"
+    links:
+      - postgis:postgis
+
+  postgis:
+    image: "postgis/postgis:12-3.1"
+    env_file: .env
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./data:/root
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgis_data:

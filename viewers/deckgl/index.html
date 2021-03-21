@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .map {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      margin: 0;
+    }
+  </style>
+  <title>Visor DeckGL</title>
+</head>
+<body>
+  <div id="map" class="map"></div>
+  <div id="layerWMSInfo"></div>
+  <script src="./lib/deckgl-v8.4.10.min.js"></script>
+  <script>
+    const osmLayer = new deck.TileLayer({
+      // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+      data: [
+        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      ],
+
+      // Since these OSM tiles support HTTP/2, we can make many concurrent requests
+      // and we aren't limited by the browser to a certain number per domain.
+      maxRequests: 20,
+
+      pickable: false,
+      highlightColor: [60, 60, 60, 40],
+      // https://wiki.openstreetmap.org/wiki/Zoom_levels
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 512,
+
+      renderSubLayers: props => {
+        const {
+          bbox: {west, south, east, north}
+        } = props.tile;
+
+        return [
+          new deck.BitmapLayer(props, {
+            data: null,
+            image: props.data,
+            bounds: [west, south, east, north]
+          })
+        ];
+      }
+    });
+
+    const layerServerMVT = new deck.MVTLayer({
+      data: 'http://localhost:7070/envolvente/tiles/{z}/{x}/{y}.mvt',
+      pickable: false,
+      minZoom: 0,
+      maxZoom: 23,
+      getLineColor: [0, 48, 184],
+      getFillColor: [103, 138, 236],
+      tileSize: 512,
+      getLineWidth: 2,
+      lineWidthMinPixels: 1
+    });
+
+    const deckgl = new deck.DeckGL({
+      container: 'map',
+      initialViewState: {
+        latitude: 41.984683,
+        longitude: 2.827893,
+        zoom: 10,
+        bearing: 0,
+        pitch: 0
+      },
+      controller: true,
+
+      layers: [osmLayer, layerServerMVT]
+    });
+
+
+
+
+
+
+
+
+    // https://bq1.cartocdn.com/viewer?t=cartobq.maps.gbif&
+  </script>
+</body>
+</html>
